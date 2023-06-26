@@ -4,25 +4,26 @@ import { ClientProxy } from '@nestjs/microservices';
 import { CreatePaymentEvent } from 'src/events/create-payment.event';
 import { CreatePaymentRequest } from 'src/requests/create-payment-request.dto';
 import { lastValueFrom } from 'rxjs';
+import { MessageHandler } from 'src/errors/messagesHandler';
+var valid = require("card-validator");
 
 @Injectable()
 export class PaymentService {
-    private payments = PAYMENTS
 
     constructor(
         @Inject('PAYMENT_SERVICE') private readonly client: ClientProxy,
     ) {
     }
     public getPayments() {
-        return this.payments;
+        return [];
     }
 
     async createPayment(createUserReq: CreatePaymentRequest) {
-        this.payments.push(createUserReq as any);
-
+        if (!valid.number(createUserReq.card).isValid) {
+            throw new BadRequestException('Invalid card number');
+        }
         const response$ = (this.client.send('payment_created', new CreatePaymentEvent(createUserReq)));
         const authorizationResponse = await lastValueFrom(response$);
-        throw new BadRequestException('yrdt');
-        return authorizationResponse;
+        return new MessageHandler(authorizationResponse).msg;
     }
 }

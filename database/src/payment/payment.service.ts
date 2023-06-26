@@ -1,17 +1,43 @@
 import { Injectable } from '@nestjs/common';
+import { InjectModel } from '@nestjs/mongoose/dist/common';
+import { Model } from 'mongoose';
 import { CreatePaymentEvent } from 'src/events/create-payment.event';
 import { Payment } from 'src/schemas/payment.schema';
+import { Product } from 'src/schemas/product.schema';
+import { User } from 'src/schemas/user.schema';
 
 @Injectable()
 export class PaymentService {
+  constructor(
+    @InjectModel(Payment.name) private paymentModel: Model<Payment>,
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Product.name) private productModel: Model<Product>,
+  ) {}
   private payments: Payment[] = [];
 
   async getPayments() {
     return [];
   }
 
-  async handleCreatePayment(payment: CreatePaymentEvent) {
-    console.log('handleCreatePayment - PAYMENT_SERVICE', payment);
-    return { status: 'OK' };
+  async handleCreatePayment(data: CreatePaymentEvent) {
+    const products = data.payment.products;
+    for (let i = 0; i < products.length; i++) {
+      const product = await this.productModel.findById(products[i]._id);
+      const product_quantity = products[i].quantity;
+      if (!product) {
+        return 'invalid-product';
+      }
+      if (product.quantity < product_quantity) {
+        return 'insufficient-quantity';
+      }
+      product.quantity -= product_quantity;
+      await product.save();
+    }
+
+    const createdPayment = new this.paymentModel({
+      ...data.payment,
+      user: '6498d2f5fb88ab87e906f8c8',
+    });
+    return createdPayment.save();
   }
 }

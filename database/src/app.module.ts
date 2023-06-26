@@ -10,6 +10,9 @@ import { Product, ProductSchema } from './schemas/product.schema';
     PaymentModule,
     MongooseModule.forRoot(
       'mongodb://alexbefia:Y4Z4E~%3Av%25L%2675HKG%2C5.hcKGm(BYL.he9@localhost:27017/',
+      {
+        dbName: 'nest',
+      },
     ),
   ],
 })
