@@ -1,8 +1,7 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { PaymentService } from './payment.service';
-import { EventPattern, MessagePattern } from '@nestjs/microservices';
-import { CreatePaymentEvent } from 'src/events/create-payment.event';
-
+import { GrpcMethod } from '@nestjs/microservices';
+import { PaymentEvent } from './payment';
 @Controller('payment')
 export class PaymentController {
   constructor(private readonly paymentService: PaymentService) {}
@@ -12,8 +11,8 @@ export class PaymentController {
     return this.paymentService.getPayments();
   }
 
-  @MessagePattern('payment_created')
-  async handleCreatePayment(data: CreatePaymentEvent) {
+  @GrpcMethod('PaymentController', 'CreatePayment')
+  async handleCreatePayment(data: PaymentEvent) {
     return this.paymentService.handleCreatePayment(data);
   }
 }

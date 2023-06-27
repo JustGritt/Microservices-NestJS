@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose/dist/common';
 import { Model } from 'mongoose';
-import { CreatePaymentEvent } from 'src/events/create-payment.event';
 import { Payment } from 'src/schemas/payment.schema';
 import { Product } from 'src/schemas/product.schema';
 import { User } from 'src/schemas/user.schema';
+import { PaymentEvent } from './payment';
 
 @Injectable()
 export class PaymentService {
@@ -19,25 +19,27 @@ export class PaymentService {
     return [];
   }
 
-  async handleCreatePayment(data: CreatePaymentEvent) {
-    const products = data.payment.products;
+  async handleCreatePayment(data: PaymentEvent) {
+    const products = data.products;
     for (let i = 0; i < products.length; i++) {
       const product = await this.productModel.findById(products[i]._id);
       const product_quantity = products[i].quantity;
       if (!product) {
-        return 'invalid-product';
+        return { msg: 'invalid-product' };
       }
       if (product.quantity < product_quantity) {
-        return 'insufficient-quantity';
+        return { msg: 'insufficient-quantity' };
       }
       product.quantity -= product_quantity;
       await product.save();
     }
 
     const createdPayment = new this.paymentModel({
-      ...data.payment,
+      //...data.payment,
       user: '6498d2f5fb88ab87e906f8c8',
     });
-    return createdPayment.save();
+    const savedPayment = await createdPayment.save();
+
+    return { msg: savedPayment._id };
   }
 }

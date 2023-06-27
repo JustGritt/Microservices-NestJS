@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+package payment;
+
+service PaymentController {
+  rpc CreatePayment (PaymentEvent) returns (Response) {}
+}
+
+message PaymentEvent {
+  repeated Product products = 1;
+    string card = 2;
+    string token = 3;
+    message Product {
+      string _id = 1;
+      int32 quantity = 2;
+    }
+}
+
+
+message Response {
+  string msg = 1;
+}
