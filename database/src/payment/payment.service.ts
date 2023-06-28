@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose/dist/common';
 import { Model } from 'mongoose';
 import { Payment } from 'src/schemas/payment.schema';
@@ -25,10 +25,10 @@ export class PaymentService {
       const product = await this.productModel.findById(products[i]._id);
       const product_quantity = products[i].quantity;
       if (!product) {
-        return { msg: 'invalid-product' };
+        return new BadRequestException({ msg: 'invalid-product' });
       }
       if (product.quantity < product_quantity) {
-        return { msg: 'insufficient-quantity' };
+        return new BadRequestException({ msg: 'insufficient-quantity' });
       }
       product.quantity -= product_quantity;
       await product.save();
