@@ -1,0 +1,17 @@
+version: '3.8'
+
+services:
+  mariadb:
+    extends:
+      file: ./compose/compose.db.yml
+      service: mariadb
+
+  mongo:
+    extends:
+      file: ./compose/compose.db.yml
+      service: mongo
+  
+  phpmyadmin:
+    extends:
+      file: ./compose/compose.db.yml
+      service: phpmyadmin
