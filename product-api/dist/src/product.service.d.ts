@@ -7,15 +7,15 @@ export declare class ProductService {
     create(data: Prisma.ProductCreateInput): Promise<Product>;
     findAll(): Promise<Product[]>;
     findById(id: number): Promise<Product>;
-    find(id: string | number, name: string): Promise<{
+    find(id: string | number, name: string): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
         name: string;
         price: number;
-    } & {}>;
+    }, unknown> & {}>;
     update(id: number, data: Prisma.ProductUpdateInput): Promise<Product>;
-    delete(name: string): Promise<{
+    delete(name: string): Promise<import("@prisma/client/runtime").GetResult<{
         id: number;
         name: string;
         price: number;
-    } & {}>;
+    }, unknown> & {}>;
 }

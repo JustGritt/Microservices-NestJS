@@ -4,12 +4,14 @@ declare class AnyNull extends NullTypesEnumValue {
 declare type Args<T, F extends Operation> = T extends {
     [K: symbol]: {
         types: {
-            [K in F]: {
-                args: any;
+            operations: {
+                [K in F]: {
+                    args: any;
+                };
             };
         };
     };
-} ? T[symbol]['types'][F]['args'] : never;
+} ? T[symbol]['types']['operations'][F]['args'] : never;
 
 declare class DbNull extends NullTypesEnumValue {
 }
