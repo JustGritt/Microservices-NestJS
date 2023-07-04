@@ -5,6 +5,8 @@ services:
     extends:
       file: ./compose/compose.db.yml
       service: mariadb
+    networks:
+      - grpc-micro_default
 
   mongo:
     extends:
@@ -15,3 +17,46 @@ services:
     extends:
       file: ./compose/compose.db.yml
       service: phpmyadmin
+
+  product-api:
+    env_file:
+      - .env
+    image: gritt/microservice
+    networks:
+      - grpc-micro_default
+    build:
+        context: .
+        dockerfile: Dockerfile
+        target: production-product
+    container_name: product-api
+    volumes:
+      - ./product-api:/usr/src/app
+    ports:
+    - ${PRODUCT_API_PORT}:${PRODUCT_API_PORT}
+    depends_on:
+        - mariadb
+    environment:
+        - DATABASE_URL=${DATABASE_URL}
+
+  payment-api:
+    env_file:
+      - .env
+    image: gritt/payment-api
+    networks:
+      - grpc-micro_default
+    build:
+        context: .
+        dockerfile: Dockerfile
+        target: production-payment
+    container_name: product-payment
+    ports:
+        - ${PAYMENT_API_PORT}:${PAYMENT_API_PORT}
+    depends_on:
+        - mongo
+    environment:
+        - MONGO_URI=${MONGO_URI}
+
+networks:
+  grpc-micro_default:
+    external: true
+    name: grpc-micro_default

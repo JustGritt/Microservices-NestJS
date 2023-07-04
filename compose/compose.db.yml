@@ -7,15 +7,17 @@ services:
       - 27017:27017
     environment:
       MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: task
+      MONGO_INITDB_ROOT_PASSWORD: passwd
+      MONGO_INITDB_DATABASE: task
 
   mariadb:
     image: mariadb
     ports:
       - 3306:3306
     environment:
-      MARIADB_ROOT_PASSWORD: passwd
-      MARIADB_DATABASE: user
+      MYSQL_ROOT_PASSWORD: passwd
+      MYSQL_DATABASE: task
+      MYSQL_USER: root
 
   phpmyadmin:
     image: phpmyadmin
@@ -27,7 +29,3 @@ services:
       PMA_USER: root
       PMA_PASSWORD: passwd
 
-networks:
-  default:
-    external: true
-    name: grpc-micro_default
