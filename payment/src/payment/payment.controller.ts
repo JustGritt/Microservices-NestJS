@@ -6,9 +6,10 @@ import { Response } from 'express';
 import { microserviceOptions } from 'src/grpc.options';
 import { PaymentController as PaymentController_ } from 'src/payment/payment.controller';
 import { PaymentService } from './payment.service';
-import { PaymentEvent, PaymentResponse } from './payment';
-import { AuthService } from './auth';
+import { PaymentEvent } from './payment';
+
 import { firstValueFrom } from 'rxjs';
+import { AuthServiceClient } from 'src/stubs/auth/auth';
 
 
 @Controller('payment')
@@ -17,12 +18,12 @@ export class PaymentController {
     @Client(microserviceOptions)
     private client: ClientGrpc;
 
-    private grpcService: AuthService;
+    private grpcService: AuthServiceClient;
     // @Inject()
     // paymentService: PaymentService;
 
     onModuleInit() {
-        this.grpcService = this.client.getService<AuthService>('AuthService');
+        this.grpcService = this.client.getService<AuthServiceClient>('AuthService');
     }
 
     @Post()

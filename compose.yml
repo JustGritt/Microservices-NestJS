@@ -12,6 +12,8 @@ services:
     extends:
       file: ./compose/compose.db.yml
       service: mongo
+    networks:
+      - grpc-micro_default
   
   phpmyadmin:
     extends:
@@ -21,22 +23,22 @@ services:
   product-api:
     env_file:
       - .env
-    image: gritt/microservice
+    image: gritt/product-api
     networks:
       - grpc-micro_default
     build:
         context: .
         dockerfile: Dockerfile
         target: production-product
+    working_dir: /usr/src/app
     container_name: product-api
-    volumes:
-      - ./product-api:/usr/src/app
     ports:
     - ${PRODUCT_API_PORT}:${PRODUCT_API_PORT}
     depends_on:
         - mariadb
     environment:
         - DATABASE_URL=${DATABASE_URL}
+    command: "npm run start:prod"
 
   payment-api:
     env_file:
@@ -48,13 +50,37 @@ services:
         context: .
         dockerfile: Dockerfile
         target: production-payment
-    container_name: product-payment
+    working_dir: /usr/src/app
+    container_name: payment-api
     ports:
         - ${PAYMENT_API_PORT}:${PAYMENT_API_PORT}
     depends_on:
         - mongo
     environment:
         - MONGO_URI=${MONGO_URI}
+    command: "npm run start:prod"
+
+  auth-api:
+    env_file:
+      - .env
+    image: gritt/auth-api
+    networks:
+      - grpc-micro_default
+    build:
+        context: .
+        dockerfile: Dockerfile
+        target: production-auth
+    working_dir: /usr/src/app
+    container_name: auth-api
+    ports:
+        - ${AUTH_API_PORT}:${AUTH_API_PORT}
+    depends_on:
+      - mongo
+    environment:
+        - MONGO_URI=${MONGO_URI}
+    command: "npm run start:prod"
+
+
 
 networks:
   grpc-micro_default:

@@ -21,11 +21,13 @@ COPY product-api/package*.json ./
 
 RUN npm install --only=prod
 
-COPY . .
+COPY product-api ./
 
-COPY --from=development /usr/src/app/dist ./dist
+COPY product-api/src/proto ./proto
 
-CMD ["node", "dist/src/main"]
+RUN npm run build
+
+RUN npx prisma generate
 
 
 
@@ -42,4 +44,19 @@ RUN npm install --only=prod
 
 COPY payment .
 
-CMD ["node", "dist/src/main"]
+RUN npm run build
+
+FROM node:18-alpine3.16 as production-auth
+
+ARG NODE_ENV=production
+ENV NODE_ENV=${NODE_ENV}
+
+WORKDIR /usr/src/app
+
+COPY auth-api/package*.json ./
+
+RUN npm install --only=prod --legacy-peer-deps
+
+COPY auth-api .
+
+RUN npm run build

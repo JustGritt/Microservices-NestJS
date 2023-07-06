@@ -1,0 +1,19 @@
+import { Body, Controller, Post } from '@nestjs/common';
+import { GrpcMethod } from '@nestjs/microservices';
+import { AuthService } from './auth.service';
+import { AuthParams } from './auth';
+
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  @GrpcMethod('AuthService', 'validateUser')
+  async validateUser(param: AuthParams) {
+    return await this.authService.validateUser(param.token);
+  }
+
+  @Post('login')
+  async login(@Body() data: { email: string; password: string }) {
+    return await this.authService.login(data);
+  }
+}

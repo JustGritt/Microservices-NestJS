@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package auth;
+
+service AuthService {
+  rpc validateUser (AuthParams) returns (AuthResponse) {}
+}
+
+message AuthParams {
+  string token = 1;
+}
+
+message AuthResponse {
+  oneof result {
+    User user = 1;
+    string error = 2;
+  }
+}
+
+
+message User {
+  string firstname = 1;
+  string lastname = 2;
+  string email = 3;
+  string password = 4;
+}
