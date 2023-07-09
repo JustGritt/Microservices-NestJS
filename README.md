@@ -3,6 +3,8 @@
 ### Docker
 Notre projet est un projet dockerizer avec nest js. 
 Un docker-compose adapter à la production, qui va se baser sur un dockerfile pour construire l'image custom de notre application.
+- `Dupliquez le .env.example en .env` pour avoir les bonnes variables d'environnement pour le projet
+- Faire un `docker-compose up -d` pour lancer le projet
 
 ### Nest js
 Nous avons trois microservices qui sont :
