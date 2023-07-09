@@ -26,7 +26,7 @@ export class AuthService {
       return { error: 'invalid-token' };
     }
     const user = await this.userService.findOne(valid.email);
-    return user;
+    return { user };
   }
 
   async login(data: { email: string; password: string }) {
@@ -42,6 +42,32 @@ export class AuthService {
         email: user_.email,
         firstname: user_.firstname,
         lastname: user_.lastname,
+        expiresIn: '121212d',
+      }),
+    };
+  }
+
+  async register(data: {
+    email: string;
+    password: string;
+    firstname: string;
+    lastname: string;
+  }) {
+    if (!data.email || !data.password) {
+      return { error: 'nothing-provided' };
+    }
+    const user_ = await this.userModel.findOne({ email: data.email });
+    if (user_) {
+      return { error: 'user-already-exists' };
+    }
+    const createdUser = await this.userModel.create({
+      email: data.email,
+      firstname: data.firstname,
+      lastname: data.lastname,
+    });
+    return {
+      access_token: this.jwtService.sign({
+        ...createdUser,
         expiresIn: '121212d',
       }),
     };

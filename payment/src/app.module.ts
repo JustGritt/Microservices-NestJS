@@ -19,11 +19,13 @@ import { join } from 'path';
     MongooseModule.forRoot(
       process.env.MONGO_URI,
       {
-        dbName: 'nest',
+        dbName: 'task',
+        user: 'root',
+        pass: 'passwd',
       },
     ),
   ],
   controllers: [PaymentController],
-  providers: [],
+  providers: [PaymentService],
 })
 export class AppModule { }

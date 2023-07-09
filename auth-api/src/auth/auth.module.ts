@@ -12,6 +12,7 @@ import { User, UserSchema } from '../schemas/user.schema';
 // TODO: Replace by @nestjs/config
 import { config } from 'dotenv';
 import { AuthController } from './auth.controller';
+import { UsersService } from 'src/users/users.service';
 config();
 
 @Module({
@@ -26,10 +27,12 @@ config();
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema }]),
     MongooseModule.forFeature([{ name: User.name, schema: UserSchema }]),
     MongooseModule.forRoot(process.env.MONGO_URI, {
-      dbName: 'nest',
+      dbName: process.env.MONGO_DB,
+      user: process.env.MONGO_USER,
+      pass: process.env.MONGO_PASSWORD,
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, JwtStrategy],
+  providers: [AuthService, JwtStrategy, UsersService],
 })
 export class AuthModule {}

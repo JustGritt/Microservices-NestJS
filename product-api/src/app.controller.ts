@@ -17,6 +17,8 @@ import {
 } from './stubs/product/v1alpha/product';
 import { GrpcMethod } from '@nestjs/microservices';
 import { Metadata } from '@grpc/grpc-js';
+
+
 @Controller()
 @ProductCRUDServiceControllerMethods()
 export class AppController implements ProductCRUDServiceController {

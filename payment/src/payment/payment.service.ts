@@ -32,7 +32,7 @@ export class PaymentService {
     
         const createdPayment = new this.paymentModel({
           ...data,
-          user: '6498d2f5fb88ab87e906f8c8',
+          user: data.user._id,
         });
         const savedPayment = await createdPayment.save();
     

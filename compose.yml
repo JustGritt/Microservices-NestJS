@@ -58,6 +58,9 @@ services:
         - mongo
     environment:
         - MONGO_URI=${MONGO_URI}
+        - MONGO_DB=${MONGO_DB}
+        - MONGO_USER=${MONGO_USER}
+        - MONGO_PASSWORD=${MONGO_PASSWORD}
     command: "npm run start:prod"
 
   auth-api:
@@ -78,9 +81,10 @@ services:
       - mongo
     environment:
         - MONGO_URI=${MONGO_URI}
+        - MONGO_DB=${MONGO_DB}
+        - MONGO_USER=${MONGO_USER}
+        - MONGO_PASSWORD=${MONGO_PASSWORD}
     command: "npm run start:prod"
-
-
 
 networks:
   grpc-micro_default:
