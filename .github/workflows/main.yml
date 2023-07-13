@@ -23,8 +23,9 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./Dockerfile.product-api
+        file: ./Dockerfile
         push: true
+        target: production-product
         tags: user/product-api:latest
 
   build_payment:
@@ -44,6 +45,7 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: .
-        file: ./Dockerfile.payment
+        file: ./Dockerfile
         push: true
+        target: production-payment
         tags: user/payment:latest
