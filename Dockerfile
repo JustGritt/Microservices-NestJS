@@ -19,9 +19,12 @@ ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
 
+# Install the Nest CLI globally
+RUN npm install -g @nestjs/cli
+
 COPY product-api/package*.json ./
 
-RUN npm install --only=prod
+RUN npm install --only=prod --legacy-peer-deps
 
 COPY product-api ./
 
@@ -37,6 +40,9 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
+
+# Install the Nest CLI globally
+RUN npm install -g @nestjs/cli
 
 COPY payment/package*.json ./
 
@@ -54,6 +60,9 @@ ARG NODE_ENV=production
 ENV NODE_ENV=${NODE_ENV}
 
 WORKDIR /usr/src/app
+
+# Install the Nest CLI globally
+RUN npm install -g @nestjs/cli
 
 COPY auth-api/package*.json ./
 
