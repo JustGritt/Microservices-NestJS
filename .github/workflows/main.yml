@@ -26,7 +26,7 @@ jobs:
         file: ./Dockerfile
         push: true
         target: production-product
-        tags: user/product-api:latest
+        tags: popokola/product-api:latest
 
   build_payment:
     needs: build_product_api
@@ -48,4 +48,4 @@ jobs:
         file: ./Dockerfile
         push: true
         target: production-payment
-        tags: user/payment:latest
+        tags: popokola/payment:latest
