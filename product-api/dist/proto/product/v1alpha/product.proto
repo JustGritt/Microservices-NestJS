@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package product.v1alpha;
+package product;
 
 message Product {
   string name = 1;
@@ -8,44 +8,17 @@ message Product {
   float price = 3;
 }
 
-service ProductCRUDService {
-  rpc Get (GetRequest) returns (GetResponse);
-  rpc Add (AddRequest) returns (AddResponse);
-  rpc Update (UpdateRequest) returns (UpdateResponse);
-  rpc Delete (DeleteRequest) returns (DeleteResponse);
+service ProductService {
+  rpc checkProduct (GetRequest) returns (GetResponse);
 }
 
 message GetRequest {
-  string name = 1;
   int32 id = 2;
-  float price = 3;
 }
 
 message GetResponse {
-  repeated Product products = 1;
-}
-
-message AddRequest {
-  string name = 1;
-  float price = 2;
-}
-
-message AddResponse {
-  Product product = 1;
-}
-
-message UpdateRequest {
-  Product product = 1;
-}
-
-message UpdateResponse {
-  Product product = 1;
-}
-
-message DeleteRequest {
-  string name = 1;
-}
-
-message DeleteResponse {
-  string message = 1;
+  oneof result {
+    Product product = 1;
+    string error = 2;
+  }
 }

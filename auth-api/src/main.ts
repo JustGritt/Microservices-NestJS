@@ -11,9 +11,9 @@ async function bootstrap() {
   app.setGlobalPrefix('api'); // Optional: Set a global prefix for your REST endpoints
   app.connectMicroservice<MicroserviceOptions>(microserviceOptions);
   await app.startAllMicroservices();
-  await app.listen(process.env.AUTH_API_PORT || 3000).then(() => {
+  await app.listen(process.env.AUTH_API_PORT ?? 3000).then(() => {
     logger.log(
-      `Auth API is listening on port ${process.env.AUTH_API_PORT || 3000}`,
+      `Auth API is listening on port ${process.env.AUTH_API_PORT ?? 3000}`,
     );
   });
 }

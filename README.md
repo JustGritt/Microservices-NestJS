@@ -23,8 +23,8 @@ C'est le service d'authentification, il permet de créer un utilisateur et de se
 payload:
 ```json
     {
-        "email": "",
-        "password": ""
+        "email": "john@doe.com",
+        "password": "password"
     }
 ```
 
@@ -42,38 +42,49 @@ payload:
 #### Product-service
 C'est le service qui permet de gérer les produits.
 - Il utilise une base de données mariadb pour stocker les produits.
-- Il communique avec le auth-service pour vérifier les tokens.
+- Il communique avec le `auth-service` pour vérifier les tokens.
+
+`http://localhost:3002` pour créer un produit
+| Cette route est protégée |
+| --- |
+| il faut donc se connecter pour pouvoir l'utiliser. Un `bearer token` fera l'affaire |
 
 
+payload:
+```json
+    {
+        "name": "test",
+        "price": 10
+    }
+```
 
 #### Payment-service
 C'est le service qui permet de gérer les paiements.
 - Il utilise une base de données mongo pour stocker les paiements.
-- Il communique avec le auth-service pour vérifier les tokens.
+- Il communique avec le `auth-service` pour vérifier les tokens.
 
-`http://localhost:3000/payment` pour créer un paiement
+`http://localhost:3000/payment` pour créer un payment
 payload:
 ```json
     {
         "products": [
             {
-                "_id":"6498cfca2acc19a2d713dc67",
-                "quantity": 1
+                "id": 0
             },
             {
-                "_id": "6498cff12acc19a2d713dc69",
-                "quantity": 2
+                "id": 1
             }
         ],
-        "user": {
-            "firstname": "Peoirrja",
-            "lastname": "Moekaua",
-            "password": "GSAZ34233"
-        },
         "card": "4539981107142377"
     }
 ```
-Les ids des produits sont ceux qui sont dans la base de données. Créez des produits avec le product-service pour avoir des `ids` à renseigner.
+
+| Cette route est protégée |
+| --- |
+| il faut donc se connecter pour pouvoir l'utiliser. Un `bearer token` fera l'affaire |
+
+
+Les ids des produits sont ceux qui sont dans la base de données du service `product-api`. Créez des produits avec le product-service pour avoir des `ids` à renseigner.
 
 
 

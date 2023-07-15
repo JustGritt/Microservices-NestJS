@@ -1,23 +1,23 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.PRODUCT_CR_UD_SERVICE_NAME = exports.ProductCRUDServiceControllerMethods = exports.PRODUCT_V1ALPHA_PACKAGE_NAME = exports.protobufPackage = void 0;
+exports.PRODUCT_SERVICE_NAME = exports.ProductServiceControllerMethods = exports.PRODUCT_PACKAGE_NAME = exports.protobufPackage = void 0;
 const microservices_1 = require("@nestjs/microservices");
-exports.protobufPackage = "product.v1alpha";
-exports.PRODUCT_V1ALPHA_PACKAGE_NAME = "product.v1alpha";
-function ProductCRUDServiceControllerMethods() {
+exports.protobufPackage = "product";
+exports.PRODUCT_PACKAGE_NAME = "product";
+function ProductServiceControllerMethods() {
     return function (constructor) {
-        const grpcMethods = ["get", "add", "update", "delete"];
+        const grpcMethods = ["checkProduct"];
         for (const method of grpcMethods) {
             const descriptor = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-            (0, microservices_1.GrpcMethod)("ProductCRUDService", method)(constructor.prototype[method], method, descriptor);
+            (0, microservices_1.GrpcMethod)("ProductService", method)(constructor.prototype[method], method, descriptor);
         }
         const grpcStreamMethods = [];
         for (const method of grpcStreamMethods) {
             const descriptor = Reflect.getOwnPropertyDescriptor(constructor.prototype, method);
-            (0, microservices_1.GrpcStreamMethod)("ProductCRUDService", method)(constructor.prototype[method], method, descriptor);
+            (0, microservices_1.GrpcStreamMethod)("ProductService", method)(constructor.prototype[method], method, descriptor);
         }
     };
 }
-exports.ProductCRUDServiceControllerMethods = ProductCRUDServiceControllerMethods;
-exports.PRODUCT_CR_UD_SERVICE_NAME = "ProductCRUDService";
+exports.ProductServiceControllerMethods = ProductServiceControllerMethods;
+exports.PRODUCT_SERVICE_NAME = "ProductService";
 //# sourceMappingURL=product.js.map

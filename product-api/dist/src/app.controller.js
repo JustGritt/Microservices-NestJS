@@ -8,66 +8,140 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.AppController = void 0;
 const common_1 = require("@nestjs/common");
 const microservices_1 = require("@nestjs/microservices");
 const product_service_1 = require("./product.service");
 const product_1 = require("./stubs/product/v1alpha/product");
+const microservices_2 = require("@nestjs/microservices");
+const grpc_config_1 = require("../config/grpc.config");
+const auth_1 = require("./stubs/auth/auth");
+const utils_1 = require("../helpers/utils");
 let AppController = exports.AppController = class AppController {
     constructor(productService) {
         this.productService = productService;
     }
-    async get(request, metadata) {
-        let product;
-        let products = [];
-        if (request.id) {
-            product = await this.productService.findById(request.id);
-            return { products: [product] };
+    onModuleInit() {
+        this.grpcAuthService = this.clientAuth.getService(auth_1.AUTH_SERVICE_NAME);
+    }
+    async checkProduct(param) {
+        try {
+            if (!param.id || typeof param.id !== 'number') {
+                return { error: 'invalid-id' };
+            }
+            const product = await this.productService.findById(param.id);
+            if (!product || Object.keys(product).length === 0) {
+                return { error: 'product-not-found' };
+            }
+            return product;
         }
-        else {
-            products = await this.productService.findAll();
-            return { products };
+        catch (error) {
+            return { error: 'internal-error' };
         }
     }
-    async update(request, metadata) {
+    async getAll() {
         try {
-            const product = await this.productService.update(request.product.id, {
-                name: request.product.name,
-                price: request.product.price,
+            const products = await this.productService.findAll();
+            return { products };
+        }
+        catch (error) {
+            return new common_1.BadRequestException(error);
+        }
+    }
+    async get(request) {
+        try {
+            let product;
+            let products = [];
+            if (request.id) {
+                product = await this.productService.findById(request.id);
+                return { products: [product] };
+            }
+            else {
+                throw new common_1.BadRequestException('id is required');
+            }
+        }
+        catch (error) {
+            return new common_1.BadRequestException(error);
+        }
+    }
+    async update(request, body, auth) {
+        try {
+            await (0, utils_1.authUser)(auth, this.grpcAuthService);
+            if (!request.id)
+                throw new common_1.BadRequestException('id is required');
+            if (!body.name)
+                throw new common_1.BadRequestException('name is required');
+            const product = await this.productService.update(request.id, {
+                name: body.name,
+                price: body.price,
             });
             return { product };
         }
         catch (error) {
-            throw new microservices_1.RpcException(error);
+            return new common_1.BadRequestException(error);
         }
     }
-    async delete(request, metadata) {
+    async add(body, auth) {
         try {
-            const product = await this.productService.delete(request.name);
-            return { message: `Product ${product.name} deleted` };
-        }
-        catch (error) {
-            throw new microservices_1.RpcException(error);
-        }
-    }
-    async add(request) {
-        try {
+            await (0, utils_1.authUser)(auth, this.grpcAuthService);
             const data = {
-                name: request === null || request === void 0 ? void 0 : request.name,
-                price: request.price,
+                name: body === null || body === void 0 ? void 0 : body.name,
+                price: body.price,
             };
             const product = await this.productService.create(data);
             return { product };
         }
         catch (error) {
-            throw new microservices_1.RpcException(error);
+            return new common_1.BadRequestException(error);
         }
     }
 };
+__decorate([
+    (0, microservices_1.Client)(grpc_config_1.authMicroserviceOptions),
+    __metadata("design:type", Object)
+], AppController.prototype, "clientAuth", void 0);
+__decorate([
+    (0, microservices_2.GrpcMethod)(product_1.PRODUCT_SERVICE_NAME, 'checkProduct'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "checkProduct", null);
+__decorate([
+    (0, common_1.Get)('/'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "getAll", null);
+__decorate([
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Req)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "get", null);
+__decorate([
+    (0, common_1.Get)('/:id'),
+    __param(0, (0, common_1.Req)()),
+    __param(1, (0, common_1.Body)()),
+    __param(2, (0, common_1.Headers)('Authorization')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, Object, String]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "update", null);
+__decorate([
+    (0, common_1.Post)(),
+    __param(0, (0, common_1.Body)()),
+    __param(1, (0, common_1.Headers)('Authorization')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
+    __metadata("design:returntype", Promise)
+], AppController.prototype, "add", null);
 exports.AppController = AppController = __decorate([
     (0, common_1.Controller)(),
-    (0, product_1.ProductCRUDServiceControllerMethods)(),
     __metadata("design:paramtypes", [product_service_1.ProductService])
 ], AppController);
 //# sourceMappingURL=app.controller.js.map

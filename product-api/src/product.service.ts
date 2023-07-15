@@ -5,6 +5,10 @@ import { Prisma } from '@prisma/client';
 @Injectable()
 export class ProductService {
   constructor(private prisma: PrismaService) {}
+
+  async createMany(data: Prisma.ProductCreateInput[]) {
+    return this.prisma.product.createMany({ data });
+  }
   create(data: Prisma.ProductCreateInput): Promise<Product> {
     try {
       return this.prisma.product.create({

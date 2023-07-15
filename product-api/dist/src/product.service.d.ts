@@ -4,6 +4,7 @@ import { Prisma } from '@prisma/client';
 export declare class ProductService {
     private prisma;
     constructor(prisma: PrismaService);
+    createMany(data: Prisma.ProductCreateInput[]): Promise<Prisma.BatchPayload>;
     create(data: Prisma.ProductCreateInput): Promise<Product>;
     findAll(): Promise<Product[]>;
     findById(id: number): Promise<Product>;
