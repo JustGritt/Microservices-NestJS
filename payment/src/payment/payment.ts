@@ -16,6 +16,6 @@ export interface PaymentEvent {
 }
 
 export interface Product {
-  _id: string;
+  id: number;
   quantity: number;
 }

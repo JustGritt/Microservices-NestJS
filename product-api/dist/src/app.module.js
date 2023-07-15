@@ -10,16 +10,15 @@ exports.AppModule = void 0;
 const common_1 = require("@nestjs/common");
 const app_controller_1 = require("./app.controller");
 const product_service_1 = require("./product.service");
-const nestjs_grpc_reflection_1 = require("nestjs-grpc-reflection");
-const grpc_config_1 = require("../config/grpc.config");
 const prisma_service_1 = require("./prisma.service");
+const product_seed_1 = require("./product.seed");
 let AppModule = exports.AppModule = class AppModule {
 };
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [nestjs_grpc_reflection_1.GrpcReflectionModule.register(grpc_config_1.grpcConfig)],
         controllers: [app_controller_1.AppController],
-        providers: [product_service_1.ProductService, prisma_service_1.PrismaService],
+        providers: [product_service_1.ProductService, prisma_service_1.PrismaService, product_seed_1.ProductSeed],
+        exports: [product_seed_1.ProductSeed],
     })
 ], AppModule);
 //# sourceMappingURL=app.module.js.map

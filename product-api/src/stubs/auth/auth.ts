@@ -6,7 +6,7 @@ import { Observable } from "rxjs";
 export const protobufPackage = "auth";
 
 export interface AuthParams {
-  token?: string;
+  token?: string | undefined;
 }
 
 export interface AuthResponse {
@@ -15,10 +15,11 @@ export interface AuthResponse {
 }
 
 export interface User {
-  firstname?: string;
-  lastname?: string;
-  email?: string;
-  password?: string;
+  id?: number | undefined;
+  firstname?: string | undefined;
+  lastname?: string | undefined;
+  email?: string | undefined;
+  password?: string | undefined;
 }
 
 export const AUTH_PACKAGE_NAME = "auth";

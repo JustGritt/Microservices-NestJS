@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { InjectModel } from '@nestjs/mongoose/dist/common';
-import { Payment } from 'src/schemas/payment.schema';
 import { User } from 'src/schemas/user.schema';
 import { Model } from 'mongoose';
 
@@ -64,6 +63,7 @@ export class AuthService {
       email: data.email,
       firstname: data.firstname,
       lastname: data.lastname,
+      password: data.password,
     });
     return {
       access_token: this.jwtService.sign({

@@ -1,13 +1,27 @@
-import { GrpcOptions, Transport } from '@nestjs/microservices';
-import {  PRODUCT_V1ALPHA_PACKAGE_NAME  } from '../src/stubs/product/v1alpha/product';
+import { ClientProviderOptions, GrpcOptions, Transport } from '@nestjs/microservices';
 import { join } from 'path';
-import { addReflectionToGrpcConfig } from 'nestjs-grpc-reflection';
+import { AUTH_PACKAGE_NAME } from '../src/stubs/auth/auth';
+import { PRODUCT_PACKAGE_NAME } from 'src/stubs/product/v1alpha/product';
 
-export const grpcConfig = addReflectionToGrpcConfig({
+
+export const authMicroserviceOptions: ClientProviderOptions = {
   transport: Transport.GRPC,
   options: {
-    url: '0.0.0.0:6000',
-    package: PRODUCT_V1ALPHA_PACKAGE_NAME,
-    protoPath: join(__dirname, '../proto/product/v1alpha/product.proto'),
+    url: 'auth-api:50031',
+    package: AUTH_PACKAGE_NAME,
+    protoPath: join(__dirname, '../src/proto/auth/auth.proto'),
   },
-}) as GrpcOptions;
+} as ClientProviderOptions;
+
+
+
+export const productMicroserviceOptions: ClientProviderOptions = {
+  name: PRODUCT_PACKAGE_NAME,
+  transport: Transport.GRPC,
+  options: {
+    url: '0.0.0.0:50131',
+    package: PRODUCT_PACKAGE_NAME,
+    protoPath: join(__dirname, '../src/proto/product/v1alpha/product.proto'),
+  },
+} as ClientProviderOptions;
+

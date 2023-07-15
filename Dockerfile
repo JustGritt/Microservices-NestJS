@@ -10,6 +10,8 @@ COPY product-api .
 
 RUN npm run build
 
+
+
 FROM node:18-alpine3.16 as production-product
 
 ARG NODE_ENV=production
@@ -22,8 +24,6 @@ COPY product-api/package*.json ./
 RUN npm install --only=prod
 
 COPY product-api ./
-
-COPY product-api/src/proto ./proto
 
 RUN npm run build
 
@@ -45,6 +45,8 @@ RUN npm install --only=prod
 COPY payment .
 
 RUN npm run build
+
+
 
 FROM node:18-alpine3.16 as production-auth
 

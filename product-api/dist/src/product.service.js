@@ -16,6 +16,9 @@ let ProductService = exports.ProductService = class ProductService {
     constructor(prisma) {
         this.prisma = prisma;
     }
+    async createMany(data) {
+        return this.prisma.product.createMany({ data });
+    }
     create(data) {
         try {
             return this.prisma.product.create({
