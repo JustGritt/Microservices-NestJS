@@ -70,6 +70,7 @@ services:
       - ${AUTH_API_PORT}:${AUTH_API_PORT}
     depends_on:
       - mongo
+    restart: on-failure:10
     environment:
       - MONGO_URI=${MONGO_URI}
       - MONGO_DB=${MONGO_DB}
